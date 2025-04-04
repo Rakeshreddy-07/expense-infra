@@ -25,6 +25,10 @@ pipeline {
             }
         }
         stage('Apply or Destroy') {
+            input{
+                message "should we continue ${params.ACTION}"
+                ok "Yes, we should"
+            }
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds-rakesh'){
                 sh """
