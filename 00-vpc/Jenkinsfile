@@ -13,7 +13,7 @@ pipeline {
         choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'select action')
     }
     stages {
-        stage('Init') {
+        stage('Init and Plan') {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds-rakesh'){
                 sh """
@@ -24,12 +24,21 @@ pipeline {
                 }
             }
         }
-
-        stage('Print Params'){
-            steps{
-                echo "Choice: ${params.CHOICE}" 
+        stage('Init and Plan') {
+            steps {
+                withAWS(region: 'us-east-1', credentials: 'aws-creds-rakesh'){
+                sh """
+                cd 00-vpc
+                if [ ${params.ACTION} == 'apply' ]
+                then
+                    terraform apply -auto-approve tfplan
+                elif [ ${params.ACTION} == 'destroy' ]
+                    terraform destroy -auto-approve
+                fi
+                """
+                    }
+                }
             }
-        }
 
     }
     post {
