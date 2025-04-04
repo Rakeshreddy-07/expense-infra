@@ -24,7 +24,7 @@ pipeline {
                 }
             }
         }
-        stage('Init and Plan') {
+        stage('Apply or Destroy') {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds-rakesh'){
                 sh """
