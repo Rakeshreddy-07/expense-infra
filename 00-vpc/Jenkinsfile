@@ -15,29 +15,16 @@ pipeline {
     stages {
         stage('Init') {
             steps {
+                withAWS(region: 'us-east-1', credentials: 'aws-creds-rakesh'){
                 sh """
                 cd 00-vpc
-                terraform init --reconfigure
+                terraform init -reconfigure
+                sh terraform plan -out=tfplan
                 """
-            }
-        }
-        stage('Plan') {
-            steps {
-                withAWS(region: 'us-east-1', credentials: 'aws-creds-rakesh'){
-                    sh 'cd 00-vpc'
-                    sh 'terraform plan -out=tfplan'
                 }
-                
             }
         }
-        stage('Deploy') {
-            when {
-                expression { env.GIT_BRANCH != "origin/main" }
-            }
-            steps {
-                sh 'echo This is deploy'
-            }
-        }
+        
         stage('Print Params'){
             steps{
                 echo "Choice: ${params.CHOICE}" 
