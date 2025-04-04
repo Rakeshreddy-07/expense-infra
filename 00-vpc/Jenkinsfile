@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Plan') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws-creds-terraform-user'){
+                withAWS(region: 'us-east-1', credentials: 'aws-creds-rakesh'){
                     sh 'cd 00-vpc'
                     sh 'terraform plan -out=tfplan'
                 }
